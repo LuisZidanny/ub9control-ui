@@ -1,0 +1,172 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
+  <span class="mask bg-gradient-danger opacity-8"></span>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h2 class="mb-0">Pesquisar de Lançamentos</h2>
+        </div>
+        <div class="card-body">
+          <form autocomplete="off" (ngSubmit)="pesquisar()">
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-last-name">Data Inicial</label>
+                    <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                      </div>
+                      <input class="form-control" type="date" name="dataTrabalhoDe" [(ngModel)]="filtro.dataTrabalhoDe">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-last-name">Data Final</label>
+                    <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                      </div>
+                      <input class="form-control" type="date" name="dataTrabalhoAte" [(ngModel)]="filtro.dataTrabalhoAte">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <button type="submit" class="btn btn-info btn-sm ">
+                    pesquisar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Lista de Lançamentos</h3>
+          <div *ngIf="!existemLancamento()">
+            <br>
+            Nenhum Lançamento cadastrado.
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light" *ngIf="existemLancamento()">
+              <tr>
+                <th class="">Dia Trabalhado</th>
+                <th class="">Receita</th>
+                <th class="">Despesa</th>
+                <th class="">Total</th>
+                <th class="text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let item of pagedItems">
+              <tr>
+                <td class="">
+                  {{ item.dataTrabalho | date:'dd/MM/yyyy'}}
+                </td>
+                <td class="">
+                  R$ {{ item.receita | number:'1.2-2' }}
+                </td>
+                <td class="">
+                  R$ {{ item.despesa | number:'1.2-2' }}
+                </td>
+                <td class="">
+                  <span [style.color]="item.total >= 0 ? 'green' : 'red'">R$ {{ item.total | number:'1.2-2' }}</span>
+                </td>
+                <td class="text-center">
+                  <!--routerLink="/pessoa/{{pessoa.codigo}}"-->
+                  <button type="button" class="btn btn-info btn-sm ml-1" rel="tooltip" data-placement="top" title="Editar"
+                    routerLink="/lancamento/{{item.codigo}}">
+                    editar
+                  </button>
+                  <!--(click)="deletar(emprestimo.codigo)"-->
+                  <button type="button" class="btn btn-danger btn-sm ml-1" rel="tooltip" data-placement="top" title="Excluir"
+                    data-toggle="modal" data-target="#myModal" (click)="modal(item.codigo)">
+                    excluir
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer py-4">
+          <div class="">
+              <span>Subtotal : R$ {{ total | number:'1.2-2' }}</span>
+          </div><br>
+          <nav aria-label="...">
+            <ul *ngIf="pager.pages && pager.pages.length" class="pagination justify-content-end mb-0">
+              <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                <a class="page-link" (click)="setPage(1)" tabindex="-1">
+                  <i class="fas fa-angle-left"></i>
+                  <span class="sr-only">Início</span>
+                </a>
+              </li>
+              <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                <a class="page-link" (click)="setPage(pager.currentPage - 1)">
+                  <i class="fas fa-angle-left"></i>
+                  <span class="sr-only">Anterior</span>
+                </a>
+              </li>
+              <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" class="page-item active">
+                <a class="page-link" (click)="setPage(page)">{{page}}</a>
+              </li>
+              <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                <a class="page-link" (click)="setPage(pager.currentPage + 1)">
+                  <i class="fas fa-angle-right"></i>
+                  <span class="sr-only">Próximo</span>
+                </a>
+              </li>
+              <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                <a class="page-link" (click)="setPage(pager.totalPages)">
+                  <i class="fas fa-angle-right"></i>
+                  <span class="sr-only">Último</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h3 class="modal-title">Excluir Lançamento</h3>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div>
+          <div class="form-group col-md-12">
+            <div class="text-center">
+              <label>Deseja realmente excluir o lançamento?</label><br />
+              <label><b>Operação não poderá ser desfeita.</b></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success btn-sm ml-1" data-dismiss="modal" (click)="deletar()">
+            Sim
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
