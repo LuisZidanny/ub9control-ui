@@ -1,14 +1,13 @@
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { Lancamento, Usuario } from 'src/app/components/model';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LancamentoService } from '../lancamento.service';
 import * as moment from 'moment';
 import { MensagensService } from 'src/app/components/mensagens.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ErrorhandlerService } from 'src/app/components/errorhandler.service';
-import * as jQuery from 'jquery';
 import { AuthService } from '../../login/auth.service';
-var $: any = jQuery;
+declare var $: any;
 
 @Component({
   selector: 'app-lancamento-cadastro',
@@ -38,6 +37,7 @@ export class LancamentoCadastroComponent implements OnInit {
   ngOnInit() {
   }
 
+  
   salvar(form: FormControl) {
     if (this.lancamento.codigo == null) {
       this.lancamento = this.conveter(this.lancamento);

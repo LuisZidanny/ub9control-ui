@@ -33,6 +33,7 @@ export class RegisterComponent implements OnInit {
     this.auth.login(email,senha).then( () =>{
       this.registerService.salvar(this.usuario)
       .then(() => {
+        form.reset();
         this.logoutService.logout();
         this.router.navigateByUrl("/login");
         this.mensagenService.showNotification('success', 'bottom', 'right', 'Usuário cadastrado com sucesso!');

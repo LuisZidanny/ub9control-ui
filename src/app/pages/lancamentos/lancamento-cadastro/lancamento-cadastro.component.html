@@ -13,17 +13,17 @@
           </div>
         </div>
         <div class="card-body">
-          <form #f="ngForm" (ngSubmit)="salvar(f)">
+          <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && salvar(f)" novalidate>
             <h5 class="text-muted mb-4">Ganhos total diários</h5>
             <div class="pl-lg-4">
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="uber">Uber</label>
-                    <input type="number" id="uber" class="form-control form-control-alternative"
+                    <input type="number" class="form-control form-control-alternative"
                       name="uber" #uber="ngModel" [(ngModel)]="lancamento.uber" required>
-                    <div *ngIf="!uber.valid && uber.touched" class="text-danger">
-                      Uber é obrigatório.
+                    <div *ngIf="f.submitted && uber.invalid" class="text-danger">
+                      <div *ngIf="uber.errors.required">preenchimento obrigatório ou inválido</div>
                     </div>
                   </div>
                 </div>
@@ -32,8 +32,8 @@
                     <label class="form-control-label" for="novenove">99</label>
                     <input type="number" id="novenove" class="form-control form-control-alternative" 
                       name="novenove" #novenove="ngModel" [(ngModel)]="lancamento.novenove" required>
-                    <div *ngIf="!novenove.valid && novenove.touched" class="text-danger">
-                      99 é obrigatório.
+                    <div *ngIf="f.submitted && novenove.invalid" class="text-danger">
+                      <div *ngIf="novenove.errors.required">preenchimento obrigatório ou inválido</div>
                     </div>
                   </div>
                 </div>
@@ -44,9 +44,9 @@
                     <label class="form-control-label" for="cabify">Cabify</label>
                     <input type="number" id="cabify" class="form-control form-control-alternative" 
                       name="cabify" #cabify="ngModel" [(ngModel)]="lancamento.cabify" required>
-                    <div *ngIf="!cabify.valid && cabify.touched" class="text-danger">
-                      Cabify é obrigatório.
-                    </div>
+                      <div *ngIf="f.submitted && cabify.invalid" class="text-danger">
+                        <div *ngIf="cabify.errors.required">preenchimento obrigatório ou inválido</div>
+                      </div>
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -54,9 +54,9 @@
                     <label class="form-control-label" for="particular">Particular <i>(Obs: lotação ou por fora)</i></label>
                     <input type="number" id="particular" class="form-control form-control-alternative" 
                       name="particular" #particular="ngModel" [(ngModel)]="lancamento.particular" required>
-                    <div *ngIf="!particular.valid && particular.touched" class="text-danger">
-                      Particular é obrigatório.
-                    </div>
+                      <div *ngIf="f.submitted && particular.invalid" class="text-danger">
+                        <div *ngIf="particular.errors.required">preenchimento obrigatório ou inválido</div>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -74,8 +74,8 @@
                       <input class="form-control" type="date" placeholder="Select date" name="date" name="dataTrabalho"
                         #dataTrabalho="ngModel" [(ngModel)]="lancamento.dataTrabalho" required>
                     </div>
-                    <div *ngIf="!dataTrabalho.valid && dataTrabalho.touched" class="text-danger">
-                      Data é obrigatório.
+                    <div *ngIf="f.submitted && dataTrabalho.invalid" class="text-danger">
+                      <div *ngIf="dataTrabalho.errors.required">preenchimento obrigatório</div>
                     </div>
                   </div>
                 </div>
@@ -89,9 +89,9 @@
                     <label class="form-control-label" for="combustivel">Combustível</label>
                     <input type="number" id="combustivel" class="form-control form-control-alternative" 
                       name="combustivel" #combustivel="ngModel" [(ngModel)]="lancamento.combustivel" required>
-                    <div *ngIf="!combustivel.valid && combustivel.touched" class="text-danger">
-                      Combustível é obrigatório.
-                    </div>
+                      <div *ngIf="f.submitted && combustivel.invalid" class="text-danger">
+                        <div *ngIf="combustivel.errors.required">preenchimento obrigatório ou inválido</div>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -101,8 +101,8 @@
                     <label class="form-control-label" for="refeicao">Refeição</label>
                     <input type="number" id="refeicao" class="refeicao form-control form-control-alternative" 
                       name="refeicao" #refeicao="ngModel" [(ngModel)]="lancamento.refeicao" required>
-                      <div *ngIf="!refeicao.valid && refeicao.touched" class="text-danger">
-                        Refeição é obrigatório.
+                      <div *ngIf="f.submitted && combustivel.invalid" class="text-danger">
+                        <div *ngIf="combustivel.errors.required">preenchimento obrigatório ou inválido</div>
                       </div>
                   </div>
                 </div>
@@ -111,7 +111,7 @@
                       name="usuario" #usuario="ngModel" [(ngModel)]="lancamento.usuario.codigo">
               <div class="row">
                 <div class="col-lg-12">
-                  <button type="submit" class="btn btn-info" [disabled]="!f.valid">Salvar</button>
+                  <button type="submit" class="btn btn-info">Salvar</button>
                 </div>
               </div>
             </div>

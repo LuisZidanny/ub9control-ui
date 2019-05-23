@@ -26,4 +26,9 @@ export class RegisterService {
     return this.http.put(`${this.apiUrls}/${codigo}`, usuario)
                      .toPromise().then(response => response.json());       
   }
+
+  public atualizarSenha(codigo : number, senha : String){
+    return this.http.put(`${this.apiUrls}/${codigo}/senha`, senha)
+                     .toPromise().then(response => response.json());  
+  }
 }

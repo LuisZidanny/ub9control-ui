@@ -2,7 +2,7 @@
   <span class="mask bg-gradient-danger opacity-8"></span>
   <!-- Header container -->
   <div class="container-fluid d-flex align-items-center">
-    
+
   </div>
 </div>
 <br><br>
@@ -48,26 +48,75 @@
           </div>
         </div>
         <div class="card-body">
-          <form #f="ngForm" (ngSubmit)="salvar(f)">
+          <form #f="ngForm" (ngSubmit)="atualizar(f)">
             <h6 class="heading-small text-muted mb-4">informação do usuário</h6>
             <div class="pl-lg-4">
               <div class="row">
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Nome</label>
-                    <input type="text" class="form-control form-control-alternative" name="nome" #nome="ngModel" [(ngModel)]="usuario.nome">
+                    <input type="text" class="form-control form-control-alternative" name="nome" #nome="ngModel"
+                      [(ngModel)]="usuario.nome" required>
+                    <div *ngIf="!nome.valid && nome.touched" class="text-danger text-right">
+                      Nome é obrigatório.
+                    </div>
                   </div>
                 </div>
               </div>
               <div>
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-email">Endereço de e-mail</label>
-                    <input type="email" class="form-control form-control-alternative" name="email" #email="ngModel" [(ngModel)]="usuario.email">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-email">Endereço de e-mail</label>
+                  <input type="email" class="form-control form-control-alternative" name="email" #email="ngModel"
+                    [(ngModel)]="usuario.email" required email>
+                  <div *ngIf="!email.valid && email.touched" class="text-danger text-right">
+                    E-mail é obrigatório.
                   </div>
+                  <div *ngIf="email.errors?.email" class="text-danger text-right">
+                    E-mail não válido.
+                  </div>
+                </div>
               </div>
               <div class="row">
                 <div class="col-lg-12">
-                  <button type="submit" class="btn btn-info">Atualizar</button>
+                  <button type="submit" [disabled]="nome.pristine && email.pristine" class="btn btn-info">Atualizar</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <br><br>
+          <form name="form" #h="ngForm" (ngSubmit)="h.form.valid && alterarSenha(h,senha.value)">
+            <h6 class="heading-small text-muted mb-4">Alteração de senha</h6>
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <label class="form-control-label" for="senha">Nova senha:</label>
+                    <input type="password" class="form-control form-control-alternative" name="senha" #senha="ngModel"
+                      ngModel required minlength="4" id="senha">
+                    <div *ngIf="h.submitted && senha.invalid" class="text-danger">
+                      <div *ngIf="senha.errors.required">Campo de preenchimento obrigatório</div>
+                      <div *ngIf="senha.errors.minlength">Senha deve ter mínimo de 4 caracters!</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="form-group">
+                  <label class="form-control-label" for="Csenha">Confirmação de senha:</label>
+                  <input type="password" class="form-control form-control-alternative" id="Csenha" name="Csenha"
+                    #Csenha="ngModel" ngModel required (keyup)="compararSenha()">
+                  <div *ngIf="h.submitted && Csenha.invalid" class="text-danger">
+                    <div *ngIf="Csenha.errors.required">Campo de preenchimento obrigatório</div>
+                    <div *ngIf="Csenha.errors.minlength">Senha deve ter mínimo de 4 caracters!</div>
+                  </div>
+                  <div *ngIf="comparasenha" class="text-danger text-right">
+                    Campos de senha diferentes!
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <button [disabled]="comparasenha" class="btn btn-info">Alterar</button>
                 </div>
               </div>
             </div>
@@ -77,4 +126,3 @@
     </div>
   </div>
 </div>
-

@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.listarLancamentoDiario(codigo)
           .then((resposta) =>{
             this.totalDiario = resposta.total;
+            console.log(Math.floor(Math.random() * 10000000));
           },() => { });
   }
 

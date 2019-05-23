@@ -3,7 +3,7 @@ import { RegisterService } from '../register/register.service';
 import { Usuario } from 'src/app/components/model';
 import { ErrorhandlerService } from 'src/app/components/errorhandler.service';
 import { AuthService } from '../login/auth.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { MensagensService } from 'src/app/components/mensagens.service';
 import { Router } from '@angular/router';
 
@@ -15,16 +15,18 @@ import { Router } from '@angular/router';
 export class PerfilComponent implements OnInit {
 
   usuario = new Usuario();
+  alterarSenhaususario = new Usuario();
+  comparasenha: boolean = false;
 
   constructor(private registerService: RegisterService,
     private errorhandler: ErrorhandlerService,
-    private auth : AuthService,
+    private auth: AuthService,
     private router: Router,
     private mensagenService: MensagensService,
   ) { }
 
   ngOnInit() {
-    if(this.auth.jwtPayload.codigo){
+    if (this.auth.jwtPayload.codigo) {
       this.getLancamento(this.auth.jwtPayload.codigo);
     }
   }
@@ -37,14 +39,36 @@ export class PerfilComponent implements OnInit {
       .catch((response) => { this.errorhandler.errorHandler(response); })
   }
 
-  salvar(form: FormControl) {
+  atualizar(form: FormControl) {
     if (this.usuario.codigo != null) {
       this.registerService.atualizar(this.usuario.codigo, this.usuario)
-        .then(()=> {
-          this.router.navigateByUrl("/perfil");
+        .then(() => {
+          this.router.navigateByUrl("/dashboard");
           this.mensagenService.showNotification('success', 'bottom', 'right', 'Usuário Atualizado com sucesso!');
         })
         .catch((response) => { this.errorhandler.errorHandler(response); });
+    }
+  }
+
+  alterarSenha(form: FormControl,senha : String){
+    if (this.usuario.codigo != null) {
+      this.registerService.atualizarSenha(this.usuario.codigo, senha)
+        .then(() => {
+          form.reset();
+          this.router.navigateByUrl("/dashboard");
+          this.mensagenService.showNotification('success', 'bottom', 'right', 'Senha Atualizado com sucesso!');
+        })
+        .catch((response) => { this.errorhandler.errorHandler(response); });
+    }
+  }
+
+  compararSenha() {
+    var senha = <HTMLInputElement>document.getElementById("senha");
+    var Csenha = <HTMLInputElement>document.getElementById("Csenha");
+    if (senha.value === Csenha.value) {
+      this.comparasenha = false;
+    } else {
+      this.comparasenha = true;
     }
   }
 }

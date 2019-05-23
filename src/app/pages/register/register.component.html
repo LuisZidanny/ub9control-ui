@@ -34,7 +34,7 @@
           <div class="text-center text-muted mb-4">
             <small>Ou cadastre-se com credenciais</small>
           </div>
-          <form #f="ngForm" (ngSubmit)="salvar(f)">
+          <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && salvar(f)">
             <div class="form-group">
               <div class="input-group input-group-alternative mb-3">
                 <div class="input-group-prepend">
@@ -43,8 +43,8 @@
                 <input class="form-control" placeholder="Nome" type="text" name="nome" #nome="ngModel" [(ngModel)]="usuario.nome"
                   required>
               </div>
-              <div *ngIf="!nome.valid && nome.touched" class="text-danger text-right">
-                Nome é obrigatório.
+              <div *ngIf="f.submitted && nome.invalid" class="text-danger text-right">
+                <div *ngIf="nome.errors.required">Nome é obrigatório</div>
               </div>
             </div>
             <div class="form-group">
@@ -55,12 +55,10 @@
                 <input class="form-control" placeholder="Email" type="email" name="email" #email="ngModel" [(ngModel)]="usuario.email"
                   required email>
               </div>
-              <div *ngIf="!email.valid && email.touched" class="text-danger text-right">
-                E-mail é obrigatório.
+              <div *ngIf="f.submitted && email.invalid" class="text-danger text-right">
+                <div *ngIf="email.errors.required">E-mail é obrigatório.</div>
+                <div *ngIf="email.errors?.email">E-mail  não válido.</div>
               </div>
-              <div *ngIf="email.errors?.email" class="text-danger text-right"> 
-                E-mail  não válido.
-             </div>
             </div>
             <div class="form-group">
               <div class="input-group input-group-alternative mb-3">
@@ -70,18 +68,14 @@
                 <input class="form-control" placeholder="Senha" type="password" name="senha" #senha="ngModel" [(ngModel)]="usuario.senha"
                  required minlength="4">
               </div>
-              <div *ngIf="!senha.valid && senha.touched" class="text-danger text-right">
-                Senha é obrigatório.
+              <div *ngIf="f.submitted && senha.invalid" class="text-danger text-right">
+                <div *ngIf="senha.errors.required">Senha é obrigatório</div>
+                <div *ngIf="senha.errors.minlength">Senha deve ter mínimo de 4 caracters!</div>
               </div>
-              <div *ngIf="senha.errors?.minlength" class="text-danger text-right">
-                Senha deve ter mínimo de 4 caracters!
-              </div> 
             </div>
-
             <div class="text-center">
-              <button type="submit" class="btn btn-primary mt-4" [disabled]="!f.valid">Cadastrar</button>
+              <button type="submit" class="btn btn-primary mt-4">Cadastrar</button>
             </div>
-            
           </form>
         </div>
       </div>
